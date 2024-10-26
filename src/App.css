@@ -1,42 +1,234 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f0f0f0;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.opacity-background {
+    background-color:rgba(52, 52, 52, 0.8);
+    transition: background-color 0.5s ease;
+}  
+
+.notes-wrapper.dimmed {
+    filter: brightness(50%);
+    pointer-events: none; 
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.heading {
+    margin-left: 20px;
+    font-size: 35px;
+    font-family: "Afacad Flux", sans-serif;
 }
 
-.card {
-  padding: 2em;
+.savedNote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-left: 20px;
+    flex-direction: row;
 }
 
-.read-the-docs {
-  color: #888;
+.pin {
+    background-color: #aaa;
+    display: block;
+    height: 20px;
+    width: 2px;
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    z-index: 1;
+}
+
+.pin:before {
+    content: '';  
+    height: 24px;
+    width: 2px;
+    left: 0;
+    position: absolute;
+    top: 8px;
+}
+
+.pin:after {
+    background-color: red;
+    background-image: radial-gradient(25% 25%, circle, hsla(0,0%,100%,.3), hsla(0,0%,0%,.3));
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.1), inset 3px 3px 3px hsla(0,0%,100%,.2), inset -3px -3px 3px hsla(0,0%,0%,.2);
+    content: '';
+    height: 12px;
+    left: -5px;
+    position: absolute;
+    top: -10px;
+    width: 12px;
+}
+
+.displayNote {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    flex-direction: column;
+    height: 300px; 
+    width: 275px;  
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;  
+    padding: 10px;  
+    box-sizing: border-box;
+    transition: transform .2s; 
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
+}
+
+.displayNote:hover {
+    transform: scale(1.1);
+}
+
+.addNote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #B2BEB5;
+    height: 300px; 
+    width: 275px;   
+    border-radius: 5px;
+    transition: width 2s;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
+}
+
+.plusSign {
+    font-size: 80px;
+    cursor: pointer;
+}
+
+.note_section {
+    display: flex;
+    justify-content: center;  
+    align-items: center;     
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.formatNote {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    flex-direction: column;
+    font-weight: bold;
+    height: 300px; 
+    width: 275px;  
+    transition: opacity 3s ease, height 1.5s ease; 
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
+    padding: 10px;  
+    box-sizing: border-box;
+}
+
+.displayTitle {
+    border: none;
+    resize: none;
+    outline: none;
+    height: 10%;  
+    width: 90%;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;   
+}
+
+.displaySavedTitle {
+    border: none;
+    resize: none;
+    outline: none;
+    height: 12%;  
+    padding-top: 5px;
+    margin-top: -5px;
+    width: 90%;
+    overflow: hidden;
+    font-family: "Afacad Flux", sans-serif;
+    text-align: center;
+    font-size: 23px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;   
+}
+
+.displayDescription {
+    height: 80%;
+    width: 90%;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;  
+    resize: none;
+    border: none;
+    font-family: "Poppins", sans-serif;
+    outline: none;  
+    overflow: hidden;
+}
+
+.displaySavedDescription {
+    height: 90%;
+    width: 90%;
+    margin-top: -16px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;  
+    resize: none;
+    border: none;
+    font-size: 15px;
+    outline: none;  
+    overflow: hidden;
+}
+
+.saveIcon {
+    font-size: 25px;
+    cursor: pointer;
+    color: green;
+}
+
+.cancelIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: red;
+    cursor: pointer;
+}
+
+.alignFormattingIcons {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+}
+
+.editIcon {
+    color: green;
+    cursor: pointer;
+}
+
+.deleteIcon {
+    color: red;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.seriesOfColors {
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
 }
