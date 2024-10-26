@@ -3,7 +3,6 @@ import { CiSaveDown2 } from "react-icons/ci";
 import { MdOutlineCancel } from "react-icons/md";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
-import randomcolor from "randomcolor";
 import "./App.css";
 
 export default function Note() {
@@ -12,11 +11,12 @@ export default function Note() {
   const [saveNote, setSaveNote] = useState<any[]>([]);
   const [popUp, setPopUp] = useState<boolean>(false);
   const [accessNoteID, setAccessNoteID] = useState<any>(null);
-  const [noteColor, setNoteColor] = useState<any>("");
+  const [noteColor, setNoteColor] = useState<any>("white");
 
   useEffect(() => {
     if (saveNote.length > 0) {
       localStorage.setItem("saveNote", JSON.stringify(saveNote));
+      console.log(saveNote, "saveNoteInLocal");
     }
   }, [saveNote]);
 
@@ -27,10 +27,18 @@ export default function Note() {
     }
   }, []);
 
+  const deleteNoteFromStorage = (noteID: any) => {
+    const removeNotes = saveNote.filter((note: any) => note.id !== noteID);
+    if (removeNotes.length === 0) {
+      localStorage.removeItem("saveNote");
+    }
+    setSaveNote(removeNotes);
+    console.log("Notes has been deleted from the storage");
+  };
+
   const displayNoteOnPopUp = (event: React.MouseEvent) => {
     event.stopPropagation();
     setPopUp(true);
-    setNoteColor(randomcolor());
   };
 
   const handleUpdateNote = (noteID: string) => {
@@ -76,54 +84,54 @@ export default function Note() {
     setAccessNoteID(null);
   };
 
+  const handleChangeColor = (color: string) => {
+    setNoteColor(color);
+  };
+
   const handleCancelNotePopUp = () => {
     setPopUp(false);
     setNoteTitle("");
     setNoteDescription("");
   };
 
-  const handleDeleteNote = (noteID: string) => {
-    setSaveNote(saveNote.filter((note: any) => note.id !== noteID));
-    setNoteTitle("");
-    setNoteDescription("");
-  };
-
   return (
-    <div>
-      <div className={popUp ? "blur-background" : ""}>
-        <h1 className="heading">Sticky Wall</h1>
-        <div className="savedNote">
-          {saveNote.map((data: any, index: any) => (
-            <div
-              key={index}
-              className="displayNote"
-              style={{ backgroundColor: data.color }}
-            >
-              <i className="pin"></i>
-              <p className="displaySavedTitle">{data.title}</p>
-              <p className="displaySavedDescription">{data.description}</p>
-              <div className="alignFormattingIcons">
-                <EditOutlined
-                  className="editIcon"
-                  title="Edit"
-                  onClick={() => handleUpdateNote(data.id)}
-                />
-                <DeleteOutlined
-                  className="deleteIcon"
-                  title="Delete"
-                  onClick={() => handleDeleteNote(data.id)}
-                />
-              </div>
+    <div className={`container ${popUp ? "opacity-background" : ""}`}>
+      <div className={`notes-wrapper ${popUp ? "dimmed" : ""}`}>
+        <div className="notes-page">
+          <h1 className="heading">Sticky Wall</h1>
+          <div className="savedNote">
+            <div className="addNote">
+              <p
+                onClick={displayNoteOnPopUp}
+                className="plusSign"
+                title="Add notes"
+              >
+                +
+              </p>
             </div>
-          ))}
-          <div className="addNote">
-            <p
-              onClick={displayNoteOnPopUp}
-              className="plusSign"
-              title="Add notes"
-            >
-              +
-            </p>
+            {saveNote.map((data: any, index: any) => (
+              <div
+                key={index}
+                className="displayNote"
+                style={{ backgroundColor: data.color }}
+              >
+                <i className="pin"></i>
+                <p className="displaySavedTitle">{data.title}</p>
+                <p className="displaySavedDescription">{data.description}</p>
+                <div className="alignFormattingIcons">
+                  <EditOutlined
+                    className="editIcon"
+                    title="Edit"
+                    onClick={() => handleUpdateNote(data.id)}
+                  />
+                  <DeleteOutlined
+                    className="deleteIcon"
+                    title="Delete"
+                    onClick={() => deleteNoteFromStorage(data.id)}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -154,6 +162,31 @@ export default function Note() {
               onClick={handleSavingNote}
               title="Save"
             />
+            <div className="seriesOfColors">
+              {[
+                "lightsalmon",
+                "darkorange",
+                "lemonchiffon",
+                "lightgreen",
+                "lightblue",
+                "violet",
+                "darkturquoise",
+                "gainsboro",
+                "chocolate",
+              ].map((color) => (
+                <div
+                  key={color}
+                  style={{
+                    display: "inline-block",
+                    backgroundColor: color,
+                    height: "15px",
+                    width: "15px",
+                    borderRadius: "50%",
+                  }}
+                  onClick={() => handleChangeColor(color)}
+                ></div>
+              ))}
+            </div>
           </div>
         </div>
       )}
